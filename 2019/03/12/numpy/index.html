@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="数据处理,">
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="Sharing Links with the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HawkEyE">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="numpy学习笔记">
+<meta name="keywords" content="数据处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="numpy">
+<meta property="og:url" content="http://yoursite.com/2019/03/12/numpy/index.html">
 <meta property="og:site_name" content="HawkEyE">
-<meta property="og:description" content="Sharing Links with the world">
+<meta property="og:description" content="numpy学习笔记">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-12T08:56:24.683Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HawkEyE">
-<meta name="twitter:description" content="Sharing Links with the world">
+<meta name="twitter:title" content="numpy">
+<meta name="twitter:description" content="numpy学习笔记">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/12/numpy/">
 
 
 
 
 
-  <title>HawkEyE</title>
+  <title>numpy | HawkEyE</title>
   
 
 
@@ -143,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -237,154 +238,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/VS-code-md/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Haoran Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HawkEyE">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/14/VS-code-md/" itemprop="url">VS Code入门</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T16:20:30+08:00">
-                2019-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/教程/" itemprop="url" rel="index">
-                    <span itemprop="name">教程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="VS-Code-简介"><a href="#VS-Code-简介" class="headerlink" title="VS Code 简介"></a>VS Code 简介</h1><p>&#160; &#160; &#160; &#160; Visual Studio Code 是微软开发的一款轻量级的编辑器，支持几乎所有主流的开发语言的语法高亮、智能代码补全、自定义快捷键、括号匹配和颜色区分、代码片段、代码对比、Diff、GIT 命令等特性，支持插件扩展，并针对网页开发和云端应用开发做了优化，支持跨平台。<br>&#160; &#160; &#160; &#160; 该系列教程将介绍 VS Code 的基本功能、配置方法以及一些语言环境（例如 python、Java、C++ 等）的配置方法。</p>
-<h2 id="中文环境配置"><a href="#中文环境配置" class="headerlink" title="中文环境配置"></a>中文环境配置</h2><p>&#160; &#160; &#160; &#160; VS Code 默认语言环境是英文，当然如果你习惯使用英文界面可以忽略本节。<br>&#160; &#160; &#160; &#160; 安装完成后，打开编辑器，并在左方点击Extension（或者直接 Ctrl+Shift+X ）打开插件搜索窗口，并输入 Chinese。选择Chinese (Simplified) Language Pack for Visual Studio Code 安装。安装完成后进行启用。使用 Ctrl+Shift+P 打开命令版，输入 config 进行搜索筛选，选择language项，并打开。将原来的语句改写为</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"locale":"zh-cn"</span><br></pre></td></tr></table></figure>
-<p>然后重启编辑器，语言调整为简体中文。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -414,9 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/12/numpy/" itemprop="url">numpy</a></h1>
+          <h1 class="post-title" itemprop="name headline">numpy</h1>
         
 
         <div class="post-meta">
@@ -488,11 +342,7 @@
       
 
       
-        
-          
-            <h1 id="numpy学习笔记"><a href="#numpy学习笔记" class="headerlink" title="numpy学习笔记"></a>numpy学习笔记</h1>
-          
-        
+        <h1 id="numpy学习笔记"><a href="#numpy学习笔记" class="headerlink" title="numpy学习笔记"></a>numpy学习笔记</h1>
       
     </div>
     
@@ -507,142 +357,40 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/09/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Haoran Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HawkEyE">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/09/hello-world/" itemprop="url">出发</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T00:00:00+08:00">
-                2019-03-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/数据处理/" rel="tag"># 数据处理</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/09/hello-world/" rel="next" title="出发">
+                <i class="fa fa-chevron-left"></i> 出发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/14/VS-code-md/" rel="prev" title="VS Code入门">
+                VS Code入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -652,10 +400,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -663,6 +412,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -683,8 +436,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -744,6 +506,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#numpy学习笔记"><span class="nav-number">1.</span> <span class="nav-text">numpy学习笔记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -884,6 +662,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
