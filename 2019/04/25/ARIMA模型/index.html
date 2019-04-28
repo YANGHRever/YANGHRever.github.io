@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="时间序列,">
 
 
 
@@ -79,16 +79,26 @@
 
 
 
-<meta name="description" content="Sharing Links with the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HawkEyE">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
+<meta name="keywords" content="时间序列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARIMA模型">
+<meta property="og:url" content="http://yoursite.com/2019/04/25/ARIMA模型/index.html">
 <meta property="og:site_name" content="HawkEyE">
-<meta property="og:description" content="Sharing Links with the world">
+<meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/25/EeCtXQ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/25/EekJ5n.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/26/EmlU1g.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/26/Em38W8.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/26/Em33Jf.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/26/Em3JSS.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/04/28/EMNfhQ.png">
+<meta property="og:updated_time" content="2019-04-28T07:40:24.058Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HawkEyE">
-<meta name="twitter:description" content="Sharing Links with the world">
+<meta name="twitter:title" content="ARIMA模型">
+<meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/04/25/EeCtXQ.png">
 
 
 
@@ -118,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/25/ARIMA模型/">
 
 
 
 
 
-  <title>HawkEyE</title>
+  <title>ARIMA模型 | HawkEyE</title>
   
 
 
@@ -143,8 +153,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -267,9 +276,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -299,9 +308,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/25/ARIMA模型/" itemprop="url">ARIMA模型</a></h1>
+          <h1 class="post-title" itemprop="name headline">ARIMA模型</h1>
         
 
         <div class="post-meta">
@@ -373,9 +380,7 @@
       
 
       
-        
-          
-            <a id="more"></a>
+        <a id="more"></a>
 <p>&#160; &#160; &#160; &#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一个开源的数据集的网站（UCI，University of California Irvine的机器学习库：数据集<a href="http://archive.ics.uci.edu/ml/datasets.php" target="_blank" rel="noopener">http://archive.ics.uci.edu/ml/datasets.php</a>），读者可自行下载自己感兴趣的数据集，做相关数据分析。</p>
 <h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>&#160; &#160; &#160; &#160;首先，对需要用到的包进行说明。注意，这里一次性将所有引用的包罗列出来，实际上，可以在需要用到包时在进行调用，不用全部写道前面</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment">#处理excel数据常用库</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#科学计算常用库</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#绘图的常用库</span></span><br><span class="line"><span class="comment"># %matplotlib inline #如果在jupyter notebook里面使用，需要添加本行</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_pacf, plot_acf <span class="comment">#自相关、偏相关函数</span></span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> MaxNLocator <span class="comment">#绘图时控制坐标轴最大值</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller <span class="comment">#稳定性检验</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose <span class="comment">#移除季节性</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.stats.diagnostic <span class="keyword">import</span> acorr_ljungbox <span class="comment">#检验是否自相关</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.arima_model <span class="keyword">import</span> ARIMA <span class="comment"># ARIMA模型</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error <span class="comment">#计算均方误差</span></span><br></pre></td></tr></table></figure>
@@ -419,8 +424,6 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集的观测值做log的逆变换</span></span><br><span class="line">test = np.exp(test)</span><br><span class="line"><span class="comment"># 设置绘制图像的大小</span></span><br><span class="line">plt.figure(figsize=(<span class="number">16</span>, <span class="number">9</span>))</span><br><span class="line"><span class="comment"># 生成网格线</span></span><br><span class="line">plt.grid()</span><br><span class="line"><span class="comment"># 绘制真实的观测值，颜色为蓝色，标签为观测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(test, color=<span class="string">'blue'</span>, label=<span class="string">'observed value'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 绘制预测值，颜色为绿色，线性为虚线，标签为预测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(predictions_series, color=<span class="string">'green'</span>, linestyle=<span class="string">'--'</span>, label=<span class="string">'Prediction'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 设置图片标题</span></span><br><span class="line">plt.title(<span class="string">'Prediction of Wind Power'</span>, fontsize=<span class="number">35</span>)</span><br><span class="line"><span class="comment"># 设置图例</span></span><br><span class="line">plt.legend(fontsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置参数刻度线样式，默认为'both'，即x轴y轴同时设置</span></span><br><span class="line">plt.tick_params(labelsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置x轴标题</span></span><br><span class="line">plt.xlabel(<span class="string">'Time [1Hour]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 设置y轴标题</span></span><br><span class="line">plt.ylabel(<span class="string">'Wind Power [kW]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 显示图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p>&#160; &#160; &#160; &#160;最终得到的效果图如下<br><img src="https://s2.ax1x.com/2019/04/28/EMNfhQ.png" alt="功率的预测值.png"><br>&#160; &#160; &#160; &#160;MSE的值为<code>Test MSE: 0.01.756</code></p>
 
-          
-        
       
     </div>
     
@@ -435,306 +438,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/02/电力系统模型/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Haoran Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/MyHeader.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HawkEyE">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/02/电力系统模型/" itemprop="url">电力系统模型</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T11:01:02+08:00">
-                2019-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/电力系统分析/" itemprop="url" rel="index">
-                    <span itemprop="name">电力系统分析</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/时间序列/" rel="tag"># 时间序列</a>
           
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="符号约定"><a href="#符号约定" class="headerlink" title="符号约定"></a>符号约定</h2><p>&#160; &#160; &#160; &#160;采用国际电工委员会推荐的约定，对符号的约定如下  </p>
-<script type="math/tex; mode=display">\begin{equation}\begin{aligned}
-\widetilde{S}&=\dot{U}\stackrel{*}I \\
-&=UI\angle(\varphi_u-\varphi_i)=UI\angle\varphi \\
-&=S(cos\varphi+\mathrm{j}sin\varphi)=P+\mathrm{j}Q
-\end{aligned}\end{equation}</script><p>式中 &#160; &#160; &#160; &#160; $\widetilde{S}$——复功率<br>&#160; &#160; &#160; &#160;&#160;&#160; &#160; &#160; $\dot{U}$——电压相量，$\dot{U}=U\angle{\varphi_u}$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\stackrel{*}I$———电流相量的共轭值<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\varphi$——功率因素角，$\varphi=\varphi_u-\varphi_i$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $S、P、Q$分别为视在功率、有功功率、无功功率 </p>
-<h2 id="发电机的数学模型"><a href="#发电机的数学模型" class="headerlink" title="发电机的数学模型"></a>发电机的数学模型</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/VS-code-md/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Haoran Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/MyHeader.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HawkEyE">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/14/VS-code-md/" itemprop="url">VS Code入门</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T16:20:30+08:00">
-                2019-03-14
-              </time>
+              <a href="/2019/04/02/电力系统模型/" rel="next" title="电力系统模型">
+                <i class="fa fa-chevron-left"></i> 电力系统模型
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/教程/" itemprop="url" rel="index">
-                    <span itemprop="name">教程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="VS-Code-简介"><a href="#VS-Code-简介" class="headerlink" title="VS Code 简介"></a>VS Code 简介</h2><p>&#160; &#160; &#160; &#160; Visual Studio Code 是微软开发的一款轻量级的编辑器，支持几乎所有主流的开发语言的语法高亮、智能代码补全、自定义快捷键、括号匹配和颜色区分、代码片段、代码对比、Diff、GIT 命令等特性，支持插件扩展，并针对网页开发和云端应用开发做了优化，支持跨平台。<br>&#160; &#160; &#160; &#160; 该系列教程将介绍 VS Code 的基本功能、配置方法以及一些语言环境（例如 python、Java、C++ 等）的配置方法。</p>
-<h2 id="中文环境配置"><a href="#中文环境配置" class="headerlink" title="中文环境配置"></a>中文环境配置</h2><p>&#160; &#160; &#160; &#160; VS Code 默认语言环境是英文，当然如果你习惯使用英文界面可以忽略本节。<br>&#160; &#160; &#160; &#160; 安装完成后，打开编辑器，并在左方点击Extension（或者直接 Ctrl+Shift+X ）打开插件搜索窗口，并输入 Chinese。选择Chinese (Simplified) Language Pack for Visual Studio Code 安装。安装完成后进行启用。使用 Ctrl+Shift+P 打开命令版，输入 config 进行搜索筛选，选择language项，并打开。将原来的语句改写为</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"locale":"zh-cn"</span><br></pre></td></tr></table></figure>
-<p>然后重启编辑器，语言调整为简体中文。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -744,10 +477,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -755,6 +489,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -775,8 +513,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -838,6 +585,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据准备"><span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自相关和偏相关"><span class="nav-text">自相关和偏相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ADF检验"><span class="nav-text">ADF检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除趋势性和季节性"><span class="nav-text">移除趋势性和季节性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARIMA模型的建立"><span class="nav-text">ARIMA模型的建立</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -980,6 +743,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
