@@ -45,6 +45,44 @@
 
 
 
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
 
 
 
@@ -79,13 +117,13 @@
 
 
 
-<meta name="description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
+<meta name="description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一">
 <meta name="keywords" content="时间序列">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARIMA模型">
 <meta property="og:url" content="http://yoursite.com/2019/04/25/ARIMA模型/index.html">
 <meta property="og:site_name" content="HawkEyE">
-<meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
+<meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/25/EeCtXQ.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/25/EekJ5n.png">
@@ -94,10 +132,10 @@
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/26/Em33Jf.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/26/Em3JSS.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/28/EMNfhQ.png">
-<meta property="og:updated_time" content="2019-04-28T07:40:24.058Z">
+<meta property="og:updated_time" content="2019-04-28T07:54:42.582Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ARIMA模型">
-<meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供">
+<meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/04/25/EeCtXQ.png">
 
 
@@ -248,16 +286,6 @@
           </a>
         </li>
       
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
-            
-            公益404
-          </a>
-        </li>
-      
 
       
     </ul>
@@ -380,8 +408,8 @@
       
 
       
-        <a id="more"></a>
-<p>&#160; &#160; &#160; &#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一个开源的数据集的网站（UCI，University of California Irvine的机器学习库：数据集<a href="http://archive.ics.uci.edu/ml/datasets.php" target="_blank" rel="noopener">http://archive.ics.uci.edu/ml/datasets.php</a>），读者可自行下载自己感兴趣的数据集，做相关数据分析。</p>
+        <p>&#160; &#160; &#160; &#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一个开源的数据集的网站（UCI，University of California Irvine的机器学习库：数据集<a href="http://archive.ics.uci.edu/ml/datasets.php" target="_blank" rel="noopener">http://archive.ics.uci.edu/ml/datasets.php</a>），读者可自行下载自己感兴趣的数据集，做相关数据分析。</p>
+<a id="more"></a>
 <h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>&#160; &#160; &#160; &#160;首先，对需要用到的包进行说明。注意，这里一次性将所有引用的包罗列出来，实际上，可以在需要用到包时在进行调用，不用全部写道前面</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment">#处理excel数据常用库</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#科学计算常用库</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#绘图的常用库</span></span><br><span class="line"><span class="comment"># %matplotlib inline #如果在jupyter notebook里面使用，需要添加本行</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_pacf, plot_acf <span class="comment">#自相关、偏相关函数</span></span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> MaxNLocator <span class="comment">#绘图时控制坐标轴最大值</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller <span class="comment">#稳定性检验</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose <span class="comment">#移除季节性</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.stats.diagnostic <span class="keyword">import</span> acorr_ljungbox <span class="comment">#检验是否自相关</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.arima_model <span class="keyword">import</span> ARIMA <span class="comment"># ARIMA模型</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error <span class="comment">#计算均方误差</span></span><br></pre></td></tr></table></figure>
 <p>&#160; &#160; &#160; &#160;进行数据的读取，并对数据的情况进行初步的探索。感兴趣的同学可以查看数据概率分布图等等。由于是单列的时间序列数据，故而不能探索多变量之间的相关性。关于数据探索的部分，今后会以其他数据集为例，进行说明。</p>
