@@ -68,17 +68,11 @@
   
 
   
-    
-      
-    
-
-    
-  
 
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -260,7 +254,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-categories"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
             分类
           </a>
@@ -273,16 +267,6 @@
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-schedule">
-          <a href="/schedule/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
-            
-            日程表
           </a>
         </li>
       
@@ -436,7 +420,7 @@
 |Critical Value(5%)|-2.861870e+00|
 |Critical Value(10%)|-2.566946e+00|
 </div><br>&#160; &#160; &#160; &#160;可以看到，在显著性水平0.05时，P Value要小于0.05。而在三个显著性水平下，对应的检验值均为负数，因此我们有必要进行ADF检验。在此之前，我们首先观察移动平均的结果<br><img src="https://s2.ax1x.com/2019/04/26/EmlU1g.png" alt="EmlU1g.png"><br>&#160; &#160; &#160; &#160;在进行移动平均的时候，移动窗口数目的选择十分重要，这会影响到尖峰值的平滑程度，或者说会影响到移除的信息。<br>&#160; &#160; &#160; &#160;显然经过ADF检验以后，我们已经明确了原时间序列的不平稳的特性，需要对原序列进行平稳化处理。  </p>
-<h2 id="移除趋势性和季节性"><a href="#移除趋势性和季节性" class="headerlink" title="移除趋势性和季节性"></a>移除趋势性和季节性</h2><p>&#160; &#160; &#160; &#160;首先我们对原序列进行对数转换<code>np.log(wp2016)</code>,再使用一阶差分$y’ = y_t -y_{t-1}$即可达到目的。注意，这里对序列进行处理之后，最终的预测结果需要逆变换，才能得到预测结果的真值。</p>
+<h2 id="移除趋势性和季节性"><a href="#移除趋势性和季节性" class="headerlink" title="移除趋势性和季节性"></a>移除趋势性和季节性</h2><p>&#160; &#160; &#160; &#160;首先我们对原序列进行对数转换<code>np.log(wp2016)</code>,再使用一阶差分$y’ = y<em>t -y</em>{t-1}$即可达到目的。注意，这里对序列进行处理之后，最终的预测结果需要逆变换，才能得到预测结果的真值。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 移除趋势性，首先进行对数转换，在使用第一差分去趋势</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decompose_plot</span><span class="params">(series, title=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 移除季节性</span></span><br><span class="line">    decomposition = seasonal_decompose(series)</span><br><span class="line">    trend = decomposition.trend</span><br><span class="line">    seasonal = decomposition.seasonal</span><br><span class="line">    residual = decomposition.resid</span><br><span class="line">    fig = decomposition.plot()</span><br><span class="line">    fig.set_size_inches(<span class="number">10</span>, <span class="number">6</span>)</span><br><span class="line">    fig.suptitle(title)</span><br><span class="line">    fig.tight_layout()</span><br><span class="line">    fig2 = acf_pacf(residual, title=<span class="string">'Residuals'</span>, figsize=(<span class="number">10</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">wp2016_log = np.log(wp2016)</span><br><span class="line">wp2016_log_diff = wp2016_log - wp2016_log.shift(<span class="number">1</span>)</span><br><span class="line">stationarity_test(wp2016_log_diff.dropna())</span><br><span class="line">decompose_plot(wp2016_log_diff.dropna(), title=<span class="string">'wp2016_log_diff'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p>&#160; &#160; &#160; &#160;首先是移动平均的效果图<br><img src="https://s2.ax1x.com/2019/04/26/Em38W8.png" alt="移动平均的效果图.png"><br>&#160; &#160; &#160; &#160;可以明显的看到，标准差已经在0附近波动，但还存在个别异常值。<br>&#160; &#160; &#160; &#160;再看处理后的自相关和偏相关函数图像，同样，处理后的序列数据并不是白噪声数据<br><img src="https://s2.ax1x.com/2019/04/26/Em33Jf.png" alt="处理后的自相关和偏相关图.png"><br>&#160; &#160; &#160; &#160;和未处理前的自相关偏相关函数图像对比，其自相关的截尾特性得到了很好的保留。<br>&#160; &#160; &#160; &#160;再看季节性和趋势性分解情况<br><img src="https://s2.ax1x.com/2019/04/26/Em3JSS.png" alt="季节性和趋势性的分解.png"></p>
 <h2 id="ARIMA模型的建立"><a href="#ARIMA模型的建立" class="headerlink" title="ARIMA模型的建立"></a>ARIMA模型的建立</h2><p>&#160; &#160; &#160; &#160;ARIMA模型含有三个参数，即ARIMA(p,d,q)，在这里简单的说明三个参数的设立原则。</p>
@@ -468,7 +452,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/时间序列/" rel="tag"># 时间序列</a>
+            <a href="/tags/时间序列/" rel="tag"><i class="fa fa-tag"></i> 时间序列</a>
           
         </div>
       
@@ -660,7 +644,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+<!--  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -669,6 +653,7 @@
 
 
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+-->
 
 
 
