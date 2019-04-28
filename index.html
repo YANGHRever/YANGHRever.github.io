@@ -242,6 +242,374 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/28/TimeSeries/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Haoran Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HawkEyE">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/28/TimeSeries/" itemprop="url">TimeSeries</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-28T11:27:55+08:00">
+                2019-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<p>&#160; &#160; &#160; &#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一个开源的数据集的网站（UCI，University of California Irvine的机器学习库：数据集<a href="http://archive.ics.uci.edu/ml/datasets.php" target="_blank" rel="noopener">http://archive.ics.uci.edu/ml/datasets.php</a>），读者可自行下载自己感兴趣的数据集，做相关数据分析。</p>
+<h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>&#160; &#160; &#160; &#160;首先，对需要用到的包进行说明。注意，这里一次性将所有引用的包罗列出来，实际上，可以在需要用到包时在进行调用，不用全部写道前面</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment">#处理excel数据常用库</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#科学计算常用库</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#绘图的常用库</span></span><br><span class="line"><span class="comment"># %matplotlib inline #如果在jupyter notebook里面使用，需要添加本行</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_pacf, plot_acf <span class="comment">#自相关、偏相关函数</span></span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> MaxNLocator <span class="comment">#绘图时控制坐标轴最大值</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller <span class="comment">#稳定性检验</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose <span class="comment">#移除季节性</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.stats.diagnostic <span class="keyword">import</span> acorr_ljungbox <span class="comment">#检验是否自相关</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.arima_model <span class="keyword">import</span> ARIMA <span class="comment"># ARIMA模型</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error <span class="comment">#计算均方误差</span></span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;进行数据的读取，并对数据的情况进行初步的探索。感兴趣的同学可以查看数据概率分布图等等。由于是单列的时间序列数据，故而不能探索多变量之间的相关性。关于数据探索的部分，今后会以其他数据集为例，进行说明。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路径名请自行更改</span></span><br><span class="line">windpower2016 = pd.read_csv(<span class="string">'D:\\School\\WindPowerPredict\\DATA\\WindPower2016.csv'</span>)</span><br><span class="line"><span class="comment"># 转换时间的属性为TimeStamp</span></span><br><span class="line">windpower2016[<span class="string">'TIME'</span>] = pd.to_datetime(windpower2016[<span class="string">'TIME'</span>])</span><br><span class="line"><span class="comment"># 以时间作为索引</span></span><br><span class="line">index_windpower2016 = windpower2016.set_index(<span class="string">'TIME'</span>)</span><br><span class="line">wp2016 = index_windpower2016[<span class="string">'WP2016'</span>]</span><br><span class="line"><span class="comment"># 显示数据集</span></span><br><span class="line">print(wp2016.head(<span class="number">5</span>)) <span class="comment">#显示前5行，观查数据集的特征</span></span><br><span class="line">plt.plot(wp2016) <span class="comment">#绘图，可以看到数据的大致走势及波形，注意，如果数据太多，可以用py.plot(wp[n:n+m])绘制部分图像</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;注意，plot函数中的参数有很多，设置曲线的颜色、粗细、形状、标记等，在本文最后，会提供一个绘图的示例，在此不详细说明。运行后，可以看到数据前5行的样式为</p>
+<p>TIME<br>2016-01-01 00:00:00    1307.606060<br>2016-01-01 01:00:00    1204.322512<br>2016-01-01 02:00:00    1201.158243<br>2016-01-01 03:00:00    1116.581197<br>2016-01-01 04:00:00    1066.738464<br>Name: WP2016, dtype: float64<br>功率的可视化图像为（为了显示更清晰，进展示前3月数据效果）<br><img src="https://s2.ax1x.com/2019/04/25/EeCtXQ.png" alt="风功率的概览.png"><br>&#160; &#160; &#160; &#160;可以很明显的看到功率的变化没有什么具体的规律，该序列有可能是一个不平稳的序列。</p>
+<h2 id="自相关和偏相关"><a href="#自相关和偏相关" class="headerlink" title="自相关和偏相关"></a>自相关和偏相关</h2><p>&#160; &#160; &#160; &#160;为了更清楚的看到风功率变化的时间序列的特点，我们首先计算其自相关和偏相关。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自相关与偏相关函数,并绘制其图像</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">acf_pacf</span><span class="params">(series, lags=<span class="number">40</span>, title=None, figsize=<span class="params">(<span class="number">10</span>, <span class="number">6</span>)</span>)</span>:</span></span><br><span class="line">    <span class="comment">#series为输入的时间序列</span></span><br><span class="line">    <span class="comment">#lags 为自相关和偏相关函数的滞后取值范围</span></span><br><span class="line">    fig = plt.figure(figsize=figsize)</span><br><span class="line">    ax1 = fig.add_subplot(<span class="number">211</span>)</span><br><span class="line">    ax1.set_xlabel(<span class="string">'lags'</span>)</span><br><span class="line">    ax1.set_ylabel(<span class="string">'Autocorrelation'</span>)</span><br><span class="line">    <span class="comment">#控制x坐标为整数</span></span><br><span class="line">    ax1.xaxis.set_major_locator(MaxNLocator(integer=<span class="keyword">True</span>))</span><br><span class="line">    plot_acf(series.dropna(), lags=lags, ax=ax1, title=<span class="string">'ACF of %s'</span> % title)</span><br><span class="line">    ax2 = fig.add_subplot(<span class="number">212</span>)</span><br><span class="line">    ax2.set_xlabel(<span class="string">'lags'</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="string">'Partial Autocorrelation'</span>)</span><br><span class="line">    ax2.xaxis.set_major_locator(MaxNLocator(integer=<span class="keyword">True</span>))</span><br><span class="line">    plot_pacf(series.dropna(), lags=lags, ax=ax2, title=<span class="string">'PACF of %s'</span> % title)</span><br><span class="line">    fig.tight_layout()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">acf_pacf(wp2016, lags=<span class="number">20</span>, title=<span class="string">'Wind Power in 2016'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>可以看到结果如下<br><img src="https://s2.ax1x.com/2019/04/25/EekJ5n.png" alt="自相关和偏相关图像.png"><br>&#160; &#160; &#160; &#160;自相关和偏相关函数图像可以反映很多问题，可以根据函数图像来判断时间序列的平稳性。平稳过程的自相关系数和偏自相关系数都会以某种方式衰减趋于0，前者测度当前序列与先前序列之间简单和常规的相关程度，后者是在控制其它先前序列的影响后，测度当前序列与某一先前序列之间的相关程度。如果某一时间序列的自相关函数随着滞后k的增加而很快地下降为0，那么我们就认为该序列为平稳序列；如果自相关函数不随着k的增加而迅速下降为0，就表明该序列不平稳。如果一个时间序列的自相关和偏相关图没有任何模式，而且数值很小，那么该序列可能就是一些互相独立的无关的随机变量。<br>&#160; &#160; &#160; &#160;可以从图中明显的看到，自相关函数随滞后数的增加有下降的趋势，但并没有迅速的变为0，而偏相关函数值在滞后数有拖尾现象。初步判断数据需要进行平稳化处理。<br>&#160; &#160; &#160; &#160;不仅如此，我们还可以根据自相关和偏相关的函数图像，直观地看出，该序列不是一个白噪声序列。下图给出了白噪声序列的函数图像。<div align="center">![白噪声的自相关和偏相关图像.png](https://s2.ax1x.com/2019/04/28/EMNRAS.png)</div><br>&#160; &#160; &#160; &#160;对比二者的自相关函数图像，就可以很直观的做出判断。</p>
+<h2 id="ADF检验"><a href="#ADF检验" class="headerlink" title="ADF检验"></a>ADF检验</h2><p>&#160; &#160; &#160; &#160;接下来，我们使用ADF检验，来检验时间序列的平稳性。  </p>
+<ul>
+<li>adfuller(timeseries, autolag=’AIC’) autolag: 按某个度量自动选择测试使用的lag数量以使该度量最小化  </li>
+<li>AIC: Akaike Information Criterion, 估算两个回归模型之间的KL散度/相对熵; KL散度/相对熵用于衡量近似分布与真实分布的接近程度</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 稳定性检验</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stationarity_test</span><span class="params">(timeseries, window=<span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="comment">#求移动平均和移动标准差</span></span><br><span class="line">    <span class="comment">#window为时间窗口的个数</span></span><br><span class="line">    rolmean = timeseries.rolling(window=window, center=<span class="keyword">False</span>).mean()</span><br><span class="line">    rolstd = timeseries.rolling(window=window, center=<span class="keyword">False</span>).std()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 绘制时间序列、移动平均和移动标准差的直线图</span></span><br><span class="line">    orig = plt.plot(timeseries, color=<span class="string">'blue'</span>, label=<span class="string">'Original'</span>)</span><br><span class="line">    mean = plt.plot(rolmean, color=<span class="string">'red'</span>, label=<span class="string">'Rolling Mean'</span>)</span><br><span class="line">    std = plt.plot(rolstd, color=<span class="string">'black'</span>, label=<span class="string">'Rolling Std'</span>)</span><br><span class="line">    plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">    plt.title(<span class="string">'Rolling Mean &amp; Standard Deviation'</span>)</span><br><span class="line">    plt.show(block=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用ADF方法检验时间序列的稳定性</span></span><br><span class="line">    print(<span class="string">'Results of ADF Test'</span>)</span><br><span class="line">    <span class="comment"># 使用减小AIC的办法估算ADF测试所需要的滞后数</span></span><br><span class="line">    adf_test = adfuller(timeseries, autolag=<span class="string">'AIC'</span>)</span><br><span class="line">    adf_test_output = pd.Series(</span><br><span class="line">        adf_test[<span class="number">0</span>:<span class="number">4</span>],</span><br><span class="line">        index=[</span><br><span class="line">            <span class="string">'Test Statistic'</span>, <span class="string">'P Value'</span>, <span class="string">'Num Lags Used'</span>,</span><br><span class="line">            <span class="string">'Num Observation Used'</span></span><br><span class="line">        ])</span><br><span class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> adf_test[<span class="number">4</span>].items():</span><br><span class="line">        adf_test_output[<span class="string">'Critical Value(%s)'</span> % key] = value</span><br><span class="line">    print(adf_test_output)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">stationarity_test(wp2016)</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;得到的结果如下 <div align="center">  
+|Results of ADF Test||
+|:---|:---|
+|Test Statistic|-9.252808e+00|  
+|P Value|1.476608e-15|
+|Num Lags Used|2.700000e+01|
+|Num Observation Used|8.756000e+03|
+|Critical Value(1%)|-3.431097e+00|
+|Critical Value(5%)|-2.861870e+00|
+|Critical Value(10%)|-2.566946e+00|
+</div><br>&#160; &#160; &#160; &#160;可以看到，在显著性水平0.05时，P Value要小于0.05。而在三个显著性水平下，对应的检验值均为负数，因此我们有必要进行ADF检验。在此之前，我们首先观察移动平均的结果<br><img src="https://s2.ax1x.com/2019/04/26/EmlU1g.png" alt="EmlU1g.png"><br>&#160; &#160; &#160; &#160;在进行移动平均的时候，移动窗口数目的选择十分重要，这会影响到尖峰值的平滑程度，或者说会影响到移除的信息。<br>&#160; &#160; &#160; &#160;显然经过ADF检验以后，我们已经明确了原时间序列的不平稳的特性，需要对原序列进行平稳化处理。  </p>
+<h2 id="移除趋势性和季节性"><a href="#移除趋势性和季节性" class="headerlink" title="移除趋势性和季节性"></a>移除趋势性和季节性</h2><p>&#160; &#160; &#160; &#160;首先我们对原序列进行对数转换<code>np.log(wp2016)</code>,再使用一阶差分$y’ = y_t -y_{t-1}$即可达到目的。注意，这里对序列进行处理之后，最终的预测结果需要逆变换，才能得到预测结果的真值。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 移除趋势性，首先进行对数转换，在使用第一差分去趋势</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decompose_plot</span><span class="params">(series, title=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 移除季节性</span></span><br><span class="line">    decomposition = seasonal_decompose(series)</span><br><span class="line">    trend = decomposition.trend</span><br><span class="line">    seasonal = decomposition.seasonal</span><br><span class="line">    residual = decomposition.resid</span><br><span class="line">    fig = decomposition.plot()</span><br><span class="line">    fig.set_size_inches(<span class="number">10</span>, <span class="number">6</span>)</span><br><span class="line">    fig.suptitle(title)</span><br><span class="line">    fig.tight_layout()</span><br><span class="line">    fig2 = acf_pacf(residual, title=<span class="string">'Residuals'</span>, figsize=(<span class="number">10</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">wp2016_log = np.log(wp2016)</span><br><span class="line">wp2016_log_diff = wp2016_log - wp2016_log.shift(<span class="number">1</span>)</span><br><span class="line">stationarity_test(wp2016_log_diff.dropna())</span><br><span class="line">decompose_plot(wp2016_log_diff.dropna(), title=<span class="string">'wp2016_log_diff'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;首先是移动平均的效果图<br><img src="https://s2.ax1x.com/2019/04/26/Em38W8.png" alt="移动平均的效果图.png"><br>&#160; &#160; &#160; &#160;可以明显的看到，标准差已经在0附近波动，但还存在个别异常值。<br>&#160; &#160; &#160; &#160;再看处理后的自相关和偏相关函数图像，同样，处理后的序列数据并不是白噪声数据<br><img src="https://s2.ax1x.com/2019/04/26/Em33Jf.png" alt="处理后的自相关和偏相关图.png"><br>&#160; &#160; &#160; &#160;和未处理前的自相关偏相关函数图像对比，其自相关的截尾特性得到了很好的保留。<br>&#160; &#160; &#160; &#160;再看季节性和趋势性分解情况<br><img src="https://s2.ax1x.com/2019/04/26/Em3JSS.png" alt="季节性和趋势性的分解.png"></p>
+<h2 id="ARIMA模型的建立"><a href="#ARIMA模型的建立" class="headerlink" title="ARIMA模型的建立"></a>ARIMA模型的建立</h2><p>&#160; &#160; &#160; &#160;ARIMA模型含有三个参数，即ARIMA(p,d,q)，在这里简单的说明三个参数的设立原则。</p>
+<ul>
+<li>d：差分阶数，即使序列达到平稳的差分阶数。序列在lag&gt;1出有显著的正自相关, 需提高差分阶数；lag=1 时自相关为0或负值, 无需差分；lag=1 时自相关&lt; -0.5, 则为过差分</li>
+<li>p: 如果PACF(lag&lt;=k)显著且PACF(lag&gt;k)均不显著, 考虑将p设为k；如果差分后序列的PACF迅速衰减到0而ACF在lag较高处仍有显著的较强的相关, 和/或 ACF(lag=1) &gt; 0, 考虑增加p</li>
+<li>q: 如果ACF(lag&lt;=k)显著且ACF(lag&gt;k)均不显著, 考虑将q设为k；如果差分后序列的ACF迅速衰减到0, 和/或 ACF(lag=1) &lt; 0, 考虑增加q<br>&#160; &#160; &#160; &#160;以上方式仅为一个参考，当然也可以通过遍历的方式，选择出最佳的值，依据准则一般为BIC或AIC。<br>&#160; &#160; &#160; &#160;我们选择模型<code>ARIMA(1,1,1)</code>，参数的选择是否有更优方案，读者可以自己尝试。在建立模型前我们首先将数据集拆分为训练集和测试集，本示例以2016年前11个月为训练集，12月数据为测试集。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 确定数据集的大小</span></span><br><span class="line">n_test_obs = <span class="number">24</span> * <span class="number">31</span></span><br><span class="line">size = int(len(wp2016_log) - n_test_obs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切分数据集</span></span><br><span class="line">train = wp2016_log[:size]</span><br><span class="line">test = wp2016_log[size:len(wp2016_log)]</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;在切分数据集之后，开始进行模型训练，<code>model.fit()</code>为训练，<code>model.forecast()</code>为预测。在这里，我们通过历史数据预测下一个值，预测完毕后，将真值纳入历史数据，继续预测下一个值。注意，笔者在纳入旧值的时候剔除新值，有兴趣的读者可以下来自行实现。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 历史值</span></span><br><span class="line">history = [x <span class="keyword">for</span> x <span class="keyword">in</span> train]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测值</span></span><br><span class="line">predictions = list()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 置信区间</span></span><br><span class="line">confidence_intervals = list()</span><br><span class="line"></span><br><span class="line">print(<span class="string">'Predicted vs Expected Values...'</span>)</span><br><span class="line">print(<span class="string">'\n'</span>)</span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> range(len(test)):</span><br><span class="line">    model = ARIMA(history, order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    model_fit = model.fit()</span><br><span class="line">    output = model_fit.forecast(steps=<span class="number">1</span>)</span><br><span class="line">    yhat = output[<span class="number">0</span>]</span><br><span class="line">    predictions.append(float(yhat))</span><br><span class="line">    confidence_intervals.append(output[<span class="number">2</span>])</span><br><span class="line">    obs = test[t]</span><br><span class="line">    history.append(obs)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 须将预测做指数转换</span></span><br><span class="line">    print(<span class="string">'predicted=%f, expected=%f'</span> % (np.exp(yhat), np.exp(obs)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用均方误差来衡量模型的好坏</span></span><br><span class="line">error = mean_squared_error(test, predictions)</span><br><span class="line">print(<span class="string">'\n'</span>)</span><br><span class="line"><span class="comment"># 将数据进行指数转换</span></span><br><span class="line">predictions = np.exp(predictions)</span><br><span class="line"><span class="comment"># 将list类型转换为Sries类型，方便储存</span></span><br><span class="line">predictions_series = pd.Series(predictions, index=test.index)</span><br><span class="line"><span class="comment"># 将数据储存在excel表中</span></span><br><span class="line">predictions_series.to_excel(<span class="string">'D:/School/WindPowerPredict/DATA/WindPower2016_Predict.xlsx'</span>)</span><br><span class="line"><span class="comment"># 查看预测的效果，MSE</span></span><br><span class="line">print(<span class="string">'Test MSE: %.6f'</span> % error)</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;最后我们提供一段绘图的示例代码，将预测值和观测值绘制在一张图中，表注标题、图例、坐标轴等。对于一些函数的参数，没有进行标注，在绘图时，效果请读者自行查阅。<br>&#160; &#160; &#160; &#160;这里提供一个关于pyton库的一个示例代码的网站<a href="https://www.programcreek.com/python/" target="_blank" rel="noopener">https://www.programcreek.com/python/</a></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集的观测值做log的逆变换</span></span><br><span class="line">test = np.exp(test)</span><br><span class="line"><span class="comment"># 设置绘制图像的大小</span></span><br><span class="line">plt.figure(figsize=(<span class="number">16</span>, <span class="number">9</span>))</span><br><span class="line"><span class="comment"># 生成网格线</span></span><br><span class="line">plt.grid()</span><br><span class="line"><span class="comment"># 绘制真实的观测值，颜色为蓝色，标签为观测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(test, color=<span class="string">'blue'</span>, label=<span class="string">'observed value'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 绘制预测值，颜色为绿色，线性为虚线，标签为预测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(predictions_series, color=<span class="string">'green'</span>, linestyle=<span class="string">'--'</span>, label=<span class="string">'Prediction'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 设置图片标题</span></span><br><span class="line">plt.title(<span class="string">'Prediction of Wind Power'</span>, fontsize=<span class="number">35</span>)</span><br><span class="line"><span class="comment"># 设置图例</span></span><br><span class="line">plt.legend(fontsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置参数刻度线样式，默认为'both'，即x轴y轴同时设置</span></span><br><span class="line">plt.tick_params(labelsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置x轴标题</span></span><br><span class="line">plt.xlabel(<span class="string">'Time [1Hour]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 设置y轴标题</span></span><br><span class="line">plt.ylabel(<span class="string">'Wind Power [kW]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 显示图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;最终得到的效果图如下<br><img src="https://s2.ax1x.com/2019/04/28/EMNfhQ.png" alt="功率的预测值.png"><br>&#160; &#160; &#160; &#160;MSE的值为<code>Test MSE: 0.01.756</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/25/ARIMA模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Haoran Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HawkEyE">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/25/ARIMA模型/" itemprop="url">ARIMA模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-25T09:18:59+08:00">
+                2019-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<p>&#160; &#160; &#160; &#160;本示例基于 python 3.7.1实现，其中涉及到的ARIMA的原理及理论方法不在本篇中讲解。本篇仅将ARIMA方法预测时间序列的步骤进行讲解，所呈现的最终效果皆为最终效果，省略了中间探索的步骤。因此，在建立ARIMA模型过程中的探索步骤，希望读者自己进行。本示例采用的数据集为2016年的风功率，读者可以访问以下连接进行下载。另外，在此提供一个开源的数据集的网站（UCI，University of California Irvine的机器学习库：数据集<a href="http://archive.ics.uci.edu/ml/datasets.php" target="_blank" rel="noopener">http://archive.ics.uci.edu/ml/datasets.php</a>），读者可自行下载自己感兴趣的数据集，做相关数据分析。</p>
+<h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>&#160; &#160; &#160; &#160;首先，对需要用到的包进行说明。注意，这里一次性将所有引用的包罗列出来，实际上，可以在需要用到包时在进行调用，不用全部写道前面</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment">#处理excel数据常用库</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#科学计算常用库</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#绘图的常用库</span></span><br><span class="line"><span class="comment"># %matplotlib inline #如果在jupyter notebook里面使用，需要添加本行</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_pacf, plot_acf <span class="comment">#自相关、偏相关函数</span></span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> MaxNLocator <span class="comment">#绘图时控制坐标轴最大值</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller <span class="comment">#稳定性检验</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose <span class="comment">#移除季节性</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.stats.diagnostic <span class="keyword">import</span> acorr_ljungbox <span class="comment">#检验是否自相关</span></span><br><span class="line"><span class="keyword">from</span> statsmodels.tsa.arima_model <span class="keyword">import</span> ARIMA <span class="comment"># ARIMA模型</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error <span class="comment">#计算均方误差</span></span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;进行数据的读取，并对数据的情况进行初步的探索。感兴趣的同学可以查看数据概率分布图等等。由于是单列的时间序列数据，故而不能探索多变量之间的相关性。关于数据探索的部分，今后会以其他数据集为例，进行说明。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路径名请自行更改</span></span><br><span class="line">windpower2016 = pd.read_csv(<span class="string">'D:\\School\\WindPowerPredict\\DATA\\WindPower2016.csv'</span>)</span><br><span class="line"><span class="comment"># 转换时间的属性为TimeStamp</span></span><br><span class="line">windpower2016[<span class="string">'TIME'</span>] = pd.to_datetime(windpower2016[<span class="string">'TIME'</span>])</span><br><span class="line"><span class="comment"># 以时间作为索引</span></span><br><span class="line">index_windpower2016 = windpower2016.set_index(<span class="string">'TIME'</span>)</span><br><span class="line">wp2016 = index_windpower2016[<span class="string">'WP2016'</span>]</span><br><span class="line"><span class="comment"># 显示数据集</span></span><br><span class="line">print(wp2016.head(<span class="number">5</span>)) <span class="comment">#显示前5行，观查数据集的特征</span></span><br><span class="line">plt.plot(wp2016) <span class="comment">#绘图，可以看到数据的大致走势及波形，注意，如果数据太多，可以用py.plot(wp[n:n+m])绘制部分图像</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;注意，plot函数中的参数有很多，设置曲线的颜色、粗细、形状、标记等，在本文最后，会提供一个绘图的示例，在此不详细说明。运行后，可以看到数据前5行的样式为</p>
+<p>TIME<br>2016-01-01 00:00:00    1307.606060<br>2016-01-01 01:00:00    1204.322512<br>2016-01-01 02:00:00    1201.158243<br>2016-01-01 03:00:00    1116.581197<br>2016-01-01 04:00:00    1066.738464<br>Name: WP2016, dtype: float64<br>功率的可视化图像为（为了显示更清晰，进展示前3月数据效果）<br><img src="https://s2.ax1x.com/2019/04/25/EeCtXQ.png" alt="风功率的概览.png"><br>&#160; &#160; &#160; &#160;可以很明显的看到功率的变化没有什么具体的规律，该序列有可能是一个不平稳的序列。</p>
+<h2 id="自相关和偏相关"><a href="#自相关和偏相关" class="headerlink" title="自相关和偏相关"></a>自相关和偏相关</h2><p>&#160; &#160; &#160; &#160;为了更清楚的看到风功率变化的时间序列的特点，我们首先计算其自相关和偏相关。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自相关与偏相关函数,并绘制其图像</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">acf_pacf</span><span class="params">(series, lags=<span class="number">40</span>, title=None, figsize=<span class="params">(<span class="number">10</span>, <span class="number">6</span>)</span>)</span>:</span></span><br><span class="line">    <span class="comment">#series为输入的时间序列</span></span><br><span class="line">    <span class="comment">#lags 为自相关和偏相关函数的滞后取值范围</span></span><br><span class="line">    fig = plt.figure(figsize=figsize)</span><br><span class="line">    ax1 = fig.add_subplot(<span class="number">211</span>)</span><br><span class="line">    ax1.set_xlabel(<span class="string">'lags'</span>)</span><br><span class="line">    ax1.set_ylabel(<span class="string">'Autocorrelation'</span>)</span><br><span class="line">    <span class="comment">#控制x坐标为整数</span></span><br><span class="line">    ax1.xaxis.set_major_locator(MaxNLocator(integer=<span class="keyword">True</span>))</span><br><span class="line">    plot_acf(series.dropna(), lags=lags, ax=ax1, title=<span class="string">'ACF of %s'</span> % title)</span><br><span class="line">    ax2 = fig.add_subplot(<span class="number">212</span>)</span><br><span class="line">    ax2.set_xlabel(<span class="string">'lags'</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="string">'Partial Autocorrelation'</span>)</span><br><span class="line">    ax2.xaxis.set_major_locator(MaxNLocator(integer=<span class="keyword">True</span>))</span><br><span class="line">    plot_pacf(series.dropna(), lags=lags, ax=ax2, title=<span class="string">'PACF of %s'</span> % title)</span><br><span class="line">    fig.tight_layout()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">acf_pacf(wp2016, lags=<span class="number">20</span>, title=<span class="string">'Wind Power in 2016'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>可以看到结果如下<br><img src="https://s2.ax1x.com/2019/04/25/EekJ5n.png" alt="自相关和偏相关图像.png"><br>&#160; &#160; &#160; &#160;自相关和偏相关函数图像可以反映很多问题，可以根据函数图像来判断时间序列的平稳性。平稳过程的自相关系数和偏自相关系数都会以某种方式衰减趋于0，前者测度当前序列与先前序列之间简单和常规的相关程度，后者是在控制其它先前序列的影响后，测度当前序列与某一先前序列之间的相关程度。如果某一时间序列的自相关函数随着滞后k的增加而很快地下降为0，那么我们就认为该序列为平稳序列；如果自相关函数不随着k的增加而迅速下降为0，就表明该序列不平稳。如果一个时间序列的自相关和偏相关图没有任何模式，而且数值很小，那么该序列可能就是一些互相独立的无关的随机变量。<br>&#160; &#160; &#160; &#160;可以从图中明显的看到，自相关函数随滞后数的增加有下降的趋势，但并没有迅速的变为0，而偏相关函数值在滞后数有拖尾现象。初步判断数据需要进行平稳化处理。<br>&#160; &#160; &#160; &#160;不仅如此，我们还可以根据自相关和偏相关的函数图像，直观地看出，该序列不是一个白噪声序列。下图给出了白噪声序列的函数图像。<div align="center">![白噪声的自相关和偏相关图像.png](https://s2.ax1x.com/2019/04/28/EMNRAS.png)</div><br>&#160; &#160; &#160; &#160;对比二者的自相关函数图像，就可以很直观的做出判断。</p>
+<h2 id="ADF检验"><a href="#ADF检验" class="headerlink" title="ADF检验"></a>ADF检验</h2><p>&#160; &#160; &#160; &#160;接下来，我们使用ADF检验，来检验时间序列的平稳性。  </p>
+<ul>
+<li>adfuller(timeseries, autolag=’AIC’) autolag: 按某个度量自动选择测试使用的lag数量以使该度量最小化  </li>
+<li>AIC: Akaike Information Criterion, 估算两个回归模型之间的KL散度/相对熵; KL散度/相对熵用于衡量近似分布与真实分布的接近程度</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 稳定性检验</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stationarity_test</span><span class="params">(timeseries, window=<span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="comment">#求移动平均和移动标准差</span></span><br><span class="line">    <span class="comment">#window为时间窗口的个数</span></span><br><span class="line">    rolmean = timeseries.rolling(window=window, center=<span class="keyword">False</span>).mean()</span><br><span class="line">    rolstd = timeseries.rolling(window=window, center=<span class="keyword">False</span>).std()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 绘制时间序列、移动平均和移动标准差的直线图</span></span><br><span class="line">    orig = plt.plot(timeseries, color=<span class="string">'blue'</span>, label=<span class="string">'Original'</span>)</span><br><span class="line">    mean = plt.plot(rolmean, color=<span class="string">'red'</span>, label=<span class="string">'Rolling Mean'</span>)</span><br><span class="line">    std = plt.plot(rolstd, color=<span class="string">'black'</span>, label=<span class="string">'Rolling Std'</span>)</span><br><span class="line">    plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">    plt.title(<span class="string">'Rolling Mean &amp; Standard Deviation'</span>)</span><br><span class="line">    plt.show(block=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用ADF方法检验时间序列的稳定性</span></span><br><span class="line">    print(<span class="string">'Results of ADF Test'</span>)</span><br><span class="line">    <span class="comment"># 使用减小AIC的办法估算ADF测试所需要的滞后数</span></span><br><span class="line">    adf_test = adfuller(timeseries, autolag=<span class="string">'AIC'</span>)</span><br><span class="line">    adf_test_output = pd.Series(</span><br><span class="line">        adf_test[<span class="number">0</span>:<span class="number">4</span>],</span><br><span class="line">        index=[</span><br><span class="line">            <span class="string">'Test Statistic'</span>, <span class="string">'P Value'</span>, <span class="string">'Num Lags Used'</span>,</span><br><span class="line">            <span class="string">'Num Observation Used'</span></span><br><span class="line">        ])</span><br><span class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> adf_test[<span class="number">4</span>].items():</span><br><span class="line">        adf_test_output[<span class="string">'Critical Value(%s)'</span> % key] = value</span><br><span class="line">    print(adf_test_output)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">stationarity_test(wp2016)</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;得到的结果如下 <div align="center">  
+|Results of ADF Test||
+|:---|:---|
+|Test Statistic|-9.252808e+00|  
+|P Value|1.476608e-15|
+|Num Lags Used|2.700000e+01|
+|Num Observation Used|8.756000e+03|
+|Critical Value(1%)|-3.431097e+00|
+|Critical Value(5%)|-2.861870e+00|
+|Critical Value(10%)|-2.566946e+00|
+</div><br>&#160; &#160; &#160; &#160;可以看到，在显著性水平0.05时，P Value要小于0.05。而在三个显著性水平下，对应的检验值均为负数，因此我们有必要进行ADF检验。在此之前，我们首先观察移动平均的结果<br><img src="https://s2.ax1x.com/2019/04/26/EmlU1g.png" alt="EmlU1g.png"><br>&#160; &#160; &#160; &#160;在进行移动平均的时候，移动窗口数目的选择十分重要，这会影响到尖峰值的平滑程度，或者说会影响到移除的信息。<br>&#160; &#160; &#160; &#160;显然经过ADF检验以后，我们已经明确了原时间序列的不平稳的特性，需要对原序列进行平稳化处理。  </p>
+<h2 id="移除趋势性和季节性"><a href="#移除趋势性和季节性" class="headerlink" title="移除趋势性和季节性"></a>移除趋势性和季节性</h2><p>&#160; &#160; &#160; &#160;首先我们对原序列进行对数转换<code>np.log(wp2016)</code>,再使用一阶差分$y’ = y_t -y_{t-1}$即可达到目的。注意，这里对序列进行处理之后，最终的预测结果需要逆变换，才能得到预测结果的真值。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 移除趋势性，首先进行对数转换，在使用第一差分去趋势</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decompose_plot</span><span class="params">(series, title=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 移除季节性</span></span><br><span class="line">    decomposition = seasonal_decompose(series)</span><br><span class="line">    trend = decomposition.trend</span><br><span class="line">    seasonal = decomposition.seasonal</span><br><span class="line">    residual = decomposition.resid</span><br><span class="line">    fig = decomposition.plot()</span><br><span class="line">    fig.set_size_inches(<span class="number">10</span>, <span class="number">6</span>)</span><br><span class="line">    fig.suptitle(title)</span><br><span class="line">    fig.tight_layout()</span><br><span class="line">    fig2 = acf_pacf(residual, title=<span class="string">'Residuals'</span>, figsize=(<span class="number">10</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">wp2016_log = np.log(wp2016)</span><br><span class="line">wp2016_log_diff = wp2016_log - wp2016_log.shift(<span class="number">1</span>)</span><br><span class="line">stationarity_test(wp2016_log_diff.dropna())</span><br><span class="line">decompose_plot(wp2016_log_diff.dropna(), title=<span class="string">'wp2016_log_diff'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;首先是移动平均的效果图<br><img src="https://s2.ax1x.com/2019/04/26/Em38W8.png" alt="移动平均的效果图.png"><br>&#160; &#160; &#160; &#160;可以明显的看到，标准差已经在0附近波动，但还存在个别异常值。<br>&#160; &#160; &#160; &#160;再看处理后的自相关和偏相关函数图像，同样，处理后的序列数据并不是白噪声数据<br><img src="https://s2.ax1x.com/2019/04/26/Em33Jf.png" alt="处理后的自相关和偏相关图.png"><br>&#160; &#160; &#160; &#160;和未处理前的自相关偏相关函数图像对比，其自相关的截尾特性得到了很好的保留。<br>&#160; &#160; &#160; &#160;再看季节性和趋势性分解情况<br><img src="https://s2.ax1x.com/2019/04/26/Em3JSS.png" alt="季节性和趋势性的分解.png"></p>
+<h2 id="ARIMA模型的建立"><a href="#ARIMA模型的建立" class="headerlink" title="ARIMA模型的建立"></a>ARIMA模型的建立</h2><p>&#160; &#160; &#160; &#160;ARIMA模型含有三个参数，即ARIMA(p,d,q)，在这里简单的说明三个参数的设立原则。</p>
+<ul>
+<li>d：差分阶数，即使序列达到平稳的差分阶数。序列在lag&gt;1出有显著的正自相关, 需提高差分阶数；lag=1 时自相关为0或负值, 无需差分；lag=1 时自相关&lt; -0.5, 则为过差分</li>
+<li>p: 如果PACF(lag&lt;=k)显著且PACF(lag&gt;k)均不显著, 考虑将p设为k；如果差分后序列的PACF迅速衰减到0而ACF在lag较高处仍有显著的较强的相关, 和/或 ACF(lag=1) &gt; 0, 考虑增加p</li>
+<li>q: 如果ACF(lag&lt;=k)显著且ACF(lag&gt;k)均不显著, 考虑将q设为k；如果差分后序列的ACF迅速衰减到0, 和/或 ACF(lag=1) &lt; 0, 考虑增加q<br>&#160; &#160; &#160; &#160;以上方式仅为一个参考，当然也可以通过遍历的方式，选择出最佳的值，依据准则一般为BIC或AIC。<br>&#160; &#160; &#160; &#160;我们选择模型<code>ARIMA(1,1,1)</code>，参数的选择是否有更优方案，读者可以自己尝试。在建立模型前我们首先将数据集拆分为训练集和测试集，本示例以2016年前11个月为训练集，12月数据为测试集。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 确定数据集的大小</span></span><br><span class="line">n_test_obs = <span class="number">24</span> * <span class="number">31</span></span><br><span class="line">size = int(len(wp2016_log) - n_test_obs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切分数据集</span></span><br><span class="line">train = wp2016_log[:size]</span><br><span class="line">test = wp2016_log[size:len(wp2016_log)]</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;在切分数据集之后，开始进行模型训练，<code>model.fit()</code>为训练，<code>model.forecast()</code>为预测。在这里，我们通过历史数据预测下一个值，预测完毕后，将真值纳入历史数据，继续预测下一个值。注意，笔者在纳入旧值的时候剔除新值，有兴趣的读者可以下来自行实现。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 历史值</span></span><br><span class="line">history = [x <span class="keyword">for</span> x <span class="keyword">in</span> train]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测值</span></span><br><span class="line">predictions = list()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 置信区间</span></span><br><span class="line">confidence_intervals = list()</span><br><span class="line"></span><br><span class="line">print(<span class="string">'Predicted vs Expected Values...'</span>)</span><br><span class="line">print(<span class="string">'\n'</span>)</span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> range(len(test)):</span><br><span class="line">    model = ARIMA(history, order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    model_fit = model.fit()</span><br><span class="line">    output = model_fit.forecast(steps=<span class="number">1</span>)</span><br><span class="line">    yhat = output[<span class="number">0</span>]</span><br><span class="line">    predictions.append(float(yhat))</span><br><span class="line">    confidence_intervals.append(output[<span class="number">2</span>])</span><br><span class="line">    obs = test[t]</span><br><span class="line">    history.append(obs)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 须将预测做指数转换</span></span><br><span class="line">    print(<span class="string">'predicted=%f, expected=%f'</span> % (np.exp(yhat), np.exp(obs)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用均方误差来衡量模型的好坏</span></span><br><span class="line">error = mean_squared_error(test, predictions)</span><br><span class="line">print(<span class="string">'\n'</span>)</span><br><span class="line"><span class="comment"># 将数据进行指数转换</span></span><br><span class="line">predictions = np.exp(predictions)</span><br><span class="line"><span class="comment"># 将list类型转换为Sries类型，方便储存</span></span><br><span class="line">predictions_series = pd.Series(predictions, index=test.index)</span><br><span class="line"><span class="comment"># 将数据储存在excel表中</span></span><br><span class="line">predictions_series.to_excel(<span class="string">'D:/School/WindPowerPredict/DATA/WindPower2016_Predict.xlsx'</span>)</span><br><span class="line"><span class="comment"># 查看预测的效果，MSE</span></span><br><span class="line">print(<span class="string">'Test MSE: %.6f'</span> % error)</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;最后我们提供一段绘图的示例代码，将预测值和观测值绘制在一张图中，表注标题、图例、坐标轴等。对于一些函数的参数，没有进行标注，在绘图时，效果请读者自行查阅。<br>&#160; &#160; &#160; &#160;这里提供一个关于pyton库的一个示例代码的网站<a href="https://www.programcreek.com/python/" target="_blank" rel="noopener">https://www.programcreek.com/python/</a></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集的观测值做log的逆变换</span></span><br><span class="line">test = np.exp(test)</span><br><span class="line"><span class="comment"># 设置绘制图像的大小</span></span><br><span class="line">plt.figure(figsize=(<span class="number">16</span>, <span class="number">9</span>))</span><br><span class="line"><span class="comment"># 生成网格线</span></span><br><span class="line">plt.grid()</span><br><span class="line"><span class="comment"># 绘制真实的观测值，颜色为蓝色，标签为观测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(test, color=<span class="string">'blue'</span>, label=<span class="string">'observed value'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 绘制预测值，颜色为绿色，线性为虚线，标签为预测值，线条粗细为1磅</span></span><br><span class="line">plt.plot(predictions_series, color=<span class="string">'green'</span>, linestyle=<span class="string">'--'</span>, label=<span class="string">'Prediction'</span>, linewidth=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 设置图片标题</span></span><br><span class="line">plt.title(<span class="string">'Prediction of Wind Power'</span>, fontsize=<span class="number">35</span>)</span><br><span class="line"><span class="comment"># 设置图例</span></span><br><span class="line">plt.legend(fontsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置参数刻度线样式，默认为'both'，即x轴y轴同时设置</span></span><br><span class="line">plt.tick_params(labelsize=<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 设置x轴标题</span></span><br><span class="line">plt.xlabel(<span class="string">'Time [1Hour]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 设置y轴标题</span></span><br><span class="line">plt.ylabel(<span class="string">'Wind Power [kW]'</span>, fontsize=<span class="number">25</span>)</span><br><span class="line"><span class="comment"># 显示图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&#160; &#160; &#160; &#160;最终得到的效果图如下<br><img src="https://s2.ax1x.com/2019/04/28/EMNfhQ.png" alt="功率的预测值.png"><br>&#160; &#160; &#160; &#160;MSE的值为<code>Test MSE: 0.01.756</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/02/电力系统模型/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -340,7 +708,7 @@
 \widetilde{S}&=\dot{U}\stackrel{*}I \\
 &=UI\angle(\varphi_u-\varphi_i)=UI\angle\varphi \\
 &=S(cos\varphi+\mathrm{j}sin\varphi)=P+\mathrm{j}Q
-\end{aligned}\end{equation}</script><p>式中&#160; &#160; &#160; &#160;$\widetilde{S}$——复功率<br>&#160; &#160; &#160; &#160;&#160;&#160; &#160; &#160; $\dot{U}$——电压相量，$\dot{U}=U\angle{\varphi_u}$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;$\stackrel{<em>}I$——电流相量的共轭值，$\stackrel{</em>}I=-I\angle{\varphi_i}$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;$\varphi$——功率因素角，$\varphi=\varphi_u-\varphi_i$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;$S、P、Q$分别为视在功率、有功功率、无功功率  </p>
+\end{aligned}\end{equation}</script><p>式中 &#160; &#160; &#160; &#160; $\widetilde{S}$——复功率<br>&#160; &#160; &#160; &#160;&#160;&#160; &#160; &#160; $\dot{U}$——电压相量，$\dot{U}=U\angle{\varphi_u}$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\stackrel{*}I$———电流相量的共轭值<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\varphi$——功率因素角，$\varphi=\varphi_u-\varphi_i$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $S、P、Q$分别为视在功率、有功功率、无功功率 </p>
 <h2 id="发电机的数学模型"><a href="#发电机的数学模型" class="headerlink" title="发电机的数学模型"></a>发电机的数学模型</h2>
           
         
@@ -836,7 +1204,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -847,7 +1215,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -858,7 +1226,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
