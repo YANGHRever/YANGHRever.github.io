@@ -100,7 +100,7 @@
 
 
 
-  <meta name="keywords" content="电力系统,">
+  <meta name="keywords" content="复习整理,">
 
 
 
@@ -111,18 +111,18 @@
 
 
 
-<meta name="description" content="本文主要讲解电力系统中各元器件的数学模型，包括发电机、变压器、输电线路以及负载。">
-<meta name="keywords" content="电力系统">
+<meta name="description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本文通过一些问题，来回顾电力电子技术中的一些基础且关键的问题。主要参考图书：王兆安,刘进军主编.(2009).电力电子技术  第5版.机械工业出版社.">
+<meta name="keywords" content="复习整理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="电力系统模型">
-<meta property="og:url" content="http://yoursite.com/2019/04/02/电力系统模型/index.html">
+<meta property="og:title" content="电力电子技术思考题">
+<meta property="og:url" content="http://yoursite.com/2019/05/04/电力电子技术思考题/index.html">
 <meta property="og:site_name" content="HawkEyE">
-<meta property="og:description" content="本文主要讲解电力系统中各元器件的数学模型，包括发电机、变压器、输电线路以及负载。">
+<meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本文通过一些问题，来回顾电力电子技术中的一些基础且关键的问题。主要参考图书：王兆安,刘进军主编.(2009).电力电子技术  第5版.机械工业出版社.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-28T07:54:31.091Z">
+<meta property="og:updated_time" content="2019-05-04T03:06:40.722Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="电力系统模型">
-<meta name="twitter:description" content="本文主要讲解电力系统中各元器件的数学模型，包括发电机、变压器、输电线路以及负载。">
+<meta name="twitter:title" content="电力电子技术思考题">
+<meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;本文通过一些问题，来回顾电力电子技术中的一些基础且关键的问题。主要参考图书：王兆安,刘进军主编.(2009).电力电子技术  第5版.机械工业出版社.">
 
 
 
@@ -152,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/04/02/电力系统模型/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/04/电力电子技术思考题/">
 
 
 
 
 
-  <title>电力系统模型 | HawkEyE</title>
+  <title>电力电子技术思考题 | HawkEyE</title>
   
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/02/电力系统模型/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/04/电力电子技术思考题/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Haoran Yang">
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">电力系统模型</h1>
+          <h1 class="post-title" itemprop="name headline">电力电子技术思考题</h1>
         
 
         <div class="post-meta">
@@ -324,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T11:01:02+08:00">
-                2019-04-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-04T09:01:44+08:00">
+                2019-05-04
               </time>
             
 
@@ -347,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/电力系统分析/" itemprop="url" rel="index">
-                    <span itemprop="name">电力系统分析</span>
+                  <a href="/categories/电力电子技术/" itemprop="url" rel="index">
+                    <span itemprop="name">电力电子技术</span>
                   </a>
                 </span>
 
@@ -384,15 +384,50 @@
       
 
       
-        <p>本文主要讲解电力系统中各元器件的数学模型，包括发电机、变压器、输电线路以及负载。</p>
+        <p>&#160; &#160; &#160; &#160;本文通过一些问题，来回顾电力电子技术中的一些基础且关键的问题。主要参考图书：王兆安,刘进军主编.(2009).电力电子技术  第5版.机械工业出版社.</p>
 <a id="more"></a>
-<h2 id="符号约定"><a href="#符号约定" class="headerlink" title="符号约定"></a>符号约定</h2><p>&#160; &#160; &#160; &#160;采用国际电工委员会推荐的约定，对符号的约定如下  </p>
-<script type="math/tex; mode=display">\begin{equation}\begin{aligned}
-\widetilde{S}&=\dot{U}\stackrel{*}I \\
-&=UI\angle(\varphi_u-\varphi_i)=UI\angle\varphi \\
-&=S(cos\varphi+\mathrm{j}sin\varphi)=P+\mathrm{j}Q
-\end{aligned}\end{equation}</script><p>式中 &#160; &#160; &#160; &#160; $\widetilde{S}$——复功率<br>&#160; &#160; &#160; &#160;&#160;&#160; &#160; &#160; $\dot{U}$——电压相量，$\dot{U}=U\angle{\varphi_u}$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\stackrel{*}I$———电流相量的共轭值<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $\varphi$——功率因素角，$\varphi=\varphi_u-\varphi_i$<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; $S、P、Q$分别为视在功率、有功功率、无功功率 </p>
-<h2 id="发电机的数学模型"><a href="#发电机的数学模型" class="headerlink" title="发电机的数学模型"></a>发电机的数学模型</h2>
+<h2 id="绪论"><a href="#绪论" class="headerlink" title="绪论"></a>绪论</h2><ol>
+<li><p>学习《电力电子技术》这门课的意义是什么</p>
+</li>
+<li><p>电力电子技术的概念，处理电能的范围，处理电能的目的</p>
+</li>
+<li><p>电力变换器有哪些类型</p>
+</li>
+<li><p>电力电子系统由哪些部分组成</p>
+</li>
+<li><p>电力电子系统的源和负载有哪些类型</p>
+</li>
+<li><p>Newell博士认为电力电子学是由哪几个学科交叉形成的</p>
+</li>
+<li><p>电力电子学为什么非常活跃</p>
+</li>
+<li><p>电力电子技术的应用为什么越来越广泛</p>
+</li>
+<li><p>电力电子变换为什么又叫做开关变换</p>
+</li>
+<li><p>电力电子变换器为什么具有效率高的特性</p>
+</li>
+<li><p>提高电力电子变换器的目的是什么</p>
+</li>
+<li><p>电力电子技术有哪些主要的应用</p>
+</li>
+<li><p>电力电子技术的发展历程</p>
+</li>
+</ol>
+<h2 id="电力电子器件"><a href="#电力电子器件" class="headerlink" title="电力电子器件"></a>电力电子器件</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><strong>电力电子器件有哪些特征</strong><br>&#160; &#160; &#160; &#160;1）电力电子器件所能处理的电功率的范围（所承受电压电流的范围）很广，一般小至毫瓦级，大至兆瓦级。一般都远大于处理信息的电子器件<br>&#160; &#160; &#160; &#160;2）一般都工作在开关状态。因为处理的电功率比较大，为了减小本身的损耗，提高效率。<br>&#160; &#160; &#160; &#160;3）在实际工作中，电力电子器件往往需要由信息电子电路来进行控制，并且信息电子电路的需要还应当通过放大电路进行放大（驱动电路）。<br>&#160; &#160; &#160; &#160;4）电力电子器件的自身损耗一般远大于信息电子器件，在工作时一般还需要安装散热器。</p>
+<p><strong>电力电子器件的损耗分为哪几种，占主要的是什么类型的损耗</strong><br>&#160; &#160; &#160; &#160;四种，分别为通态损耗、断态损耗、开通损耗、关断损耗，后两者又统称开关损耗。一般来说，通态损耗是电力电子器件损耗的主要原因；但当器件的开关频率较高时，开关损耗也会随之增大而可能成为器件功率损耗的主要原因。</p>
+<p><strong>电力电子系统中主电路和控制电路之间为什么需要有电气隔离，有哪些电气隔离的方法</strong><br>&#160; &#160; &#160; &#160;电力电子在实际应用中，一般是由控制电路、驱动电路和以电力电子器件为核心的主电路组成一个系统。主电路的电压和电流一般都大，而控制电路的元器件只能承受较小的电压和电流，因此在主电路和控制电路连接的路径上，如驱动电路和主电路的连接处，或者驱动电路与控制信号的连接处，以及主电路与检测电路的连接处，一般需要进行电气隔离，而通过其他手段如光、磁来传递信号。</p>
+<p><strong>电力电子系统中驱动电路和保护电路的作用是什么</strong><br>&#160; &#160; &#160; &#160;驱动电路：放大控制电路的控制信号，以控制主电路中电力电子器件的导通或关断，来完成整个系统的功能；保护电路：主电路中往往存在电压和电流的过冲，而电力电子器件承受过电压和过电流的能力较弱，因此在主电路和控制电路中附加一些保护电路，以保证整个电力电子系统的正常可靠运行是十分必要的。</p>
+<p><strong>按被控制信号的控制程度，可将电力电子器件分为哪几种类型</strong><br>&#160; &#160; &#160; &#160;半控型器件、全控型器件、不可控器件</p>
+<p><strong>电平触发型和脉冲触发型器件有什么区别</strong><br>&#160; &#160; &#160; &#160;二者的驱动电路加在电力电子器件控制端和公共端之间有效信号的波形不同。施加一个电压或者电流的脉冲信号来实现器件的开通或者关断的为脉冲型触发型器件；施加一定电平的电压或电流信号来使开通并维持在导通状态，或者关断并维持在阻断状态的，为电平控制型器件</p>
+<p><strong>单极型器件和双极型器件的区别是什么</strong><br>&#160; &#160; &#160; &#160;其内部电子和空穴两种载流子参与导电的情况不同。单极型：由一种载流子参与导电；双极型：由电子和空穴两种载流子参与导电；复合型：单极型和双极型复合而成的器件</p>
+<p><strong>导体、半导体、绝缘体的自由载流子浓度各在什么范围</strong><br>&#160; &#160; &#160; &#160;</p>
+<h3 id="电力二极管（不可控器件）"><a href="#电力二极管（不可控器件）" class="headerlink" title="电力二极管（不可控器件）"></a>电力二极管（不可控器件）</h3><p><strong>PN结中空间电荷区是怎样形成的</strong><br>&#160; &#160; &#160; &#160;</p>
+<p><strong>分析PN结中的单向导电原理</strong><br>&#160; &#160; &#160; &#160;</p>
+<p><strong>电力二极管的结构中的低参杂N区起什么作用</strong><br>&#160; &#160; &#160; &#160;</p>
+<p><strong>什么是电导调制效应</strong><br>&#160; &#160; &#160; &#160;当PN结上流过的正向电流较小时，二极管的电阻主要是作为基片的低参杂N区的欧姆电阻，其阻值较高且为常量，因而管压降随正向电流的上升而增加；当PN结上流过的正向电流较大时，由P区注入并积累在低参杂N区的少子空穴浓度也相应大幅增加，使得其电阻率明显下降，即电导率大大增加，这就是电导调制效应。</p>
+<p><strong>电力二极管正向导通时，即使正向电流有较明显的变化，正向电压降也只有微小的变化。试分析原因。</strong><br>&#160; &#160; &#160; &#160;电导调制效应</p>
+
       
     </div>
     
@@ -409,7 +444,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/电力系统/" rel="tag"><i class="fa fa-tag"></i> 电力系统</a>
+            <a href="/tags/复习整理/" rel="tag"><i class="fa fa-tag"></i> 复习整理</a>
           
         </div>
       
@@ -422,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/14/VS-code-md/" rel="next" title="VS Code入门">
-                <i class="fa fa-chevron-left"></i> VS Code入门
+              <a href="/2019/04/25/ARIMA模型/" rel="next" title="ARIMA模型">
+                <i class="fa fa-chevron-left"></i> ARIMA模型
               </a>
             
           </div>
@@ -431,10 +466,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/25/ARIMA模型/" rel="prev" title="ARIMA模型">
-                ARIMA模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -568,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#符号约定"><span class="nav-text">符号约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发电机的数学模型"><span class="nav-text">发电机的数学模型</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#绪论"><span class="nav-text">绪论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#电力电子器件"><span class="nav-text">电力电子器件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电力二极管（不可控器件）"><span class="nav-text">电力二极管（不可控器件）</span></a></li></ol></li></ol></div>
             
 
           </div>
